@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="yellow">
+  <head>
+    <meta charset="utf-8" />
+    <title>Blogger | Sign Up & Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap');
+
+      /* ---------- THEMES ---------- */
+      :root[data-theme="yellow"]{
+        --bg-gradient: linear-gradient(135deg, #ffe08a, #f59e0b);
+        --accent: #e09f3e;
+        --text-on-bg: #111827;
+        --card-bg: #ffffff;
+        --card-text: #111827;
+        --muted: #6b7280;
+        --input-border: #cbd5e1;
+        --input-focus: #e09f3e;
+        --link: #b45309;
+        --slider: linear-gradient(135deg, #ffd166, #f59e0b);
+      }
+      :root[data-theme="blue"]{
+        --bg-gradient: linear-gradient(135deg, #0f172a, #1e293b);
+        --accent: #2563eb;
+        --text-on-bg: #e5e7eb;
+        --card-bg: #ffffff;
+        --card-text: #111827;
+        --muted: #6b7280;
+        --input-border: #cbd5e1;
+        --input-focus: #2563eb;
+        --link: #1d4ed8;
+        --slider: #2563eb;
+      }
+
+      /* ---------- BASE ---------- */
+      *{ box-sizing: border-box; margin:0; padding:0; }
+      html, body { height: 100%; }
+      body{
+        font-family: 'Raleway', sans-serif;
+        min-height: 100dvh;
+        display: grid;
+        grid-template-rows: auto minmax(0,1fr) auto; /* critical for inner scroll */
+        background: var(--bg-gradient);
+      }
+
+      /* ---------- HEADER ---------- */
+      header{
+        text-align:center;
+        padding: 24px 16px 8px;
+        color: var(--text-on-bg);
+      }
+      header h1{ font-size: 2rem; font-weight: 700; line-height: 1.2; }
+      header p{ margin-top:6px; font-size: 1rem; opacity:.95; }
+
+      /* ---------- MAIN / WRAPPER (scrollable) ---------- */
+      main{
+        display:grid;
+        place-items:center;
+        padding: 16px;
+        min-height: 0; /* allow child to shrink and scroll */
+      }
+      .wrapper{
+        width: 100%;
+        max-width: 420px;
+        max-height: 100%;          /* constrain vertically to available space */
+        overflow-y: auto;          /* vertical scrollbar when needed */
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        scrollbar-gutter: stable;  /* keeps layout from shifting when bar appears */
+        background: var(--card-bg);
+        color: var(--card-text);
+        padding: 28px;
+        border-radius: 12px;
+        box-shadow: 0 12px 30px rgba(0,0,0,.25);
+      }
+
+      .title-text{
+        margin-bottom: 18px;
+        font-size: .98rem;
+        font-weight: 500;
+        text-align: center;
+        color: var(--card-text);
+      }
+
+      /* ---------- TABS / SLIDER ---------- */
+      .slide-controls{
+        position: relative;
+        display:flex;
+        height:50px;
+        width:100%;
+        overflow:hidden;
+        margin: 18px 0 22px;
+        border:1px solid #e5e7eb;
+        border-radius: 8px;
+        background:#f8fafc;
+      }
+      .slide-controls input[type="radio"]{ display:none; }
+      .slide-controls label.slide{
+        width:100%;
+        font-size:16px;
+        font-weight:700;
+        text-align:center;
+        line-height:48px;
+        cursor:pointer;
+        z-index:1;
+        color:#374151;
+        user-select:none;
+        transition: color .2s ease;
+      }
+      .slide-controls .slider-tab{
+        position:absolute;
+        inset:0 auto 0 0;
+        width:50%;
+        border-radius:8px;
+        background: var(--slider);
+        transition: left .35s ease;
+        z-index:0;
+      }
+      #login:checked ~ label.login{ color:#fff; }
+      #signup:checked ~ label.signup{ color:#fff; }
+      #signup:checked ~ .slider-tab{ left:50%; }
+
+      /* ---------- FORMS ---------- */
+      .form-container{ width:100%; overflow:hidden; }
+      .form-inner{
+        display:flex;
+        width:200%;
+        will-change: transform;
+        transition: transform .35s ease;
+      }
+      .form-inner form{ width:50%; padding-right:4px; }
+      .field{ margin-top:14px; }
+      .field input{
+        width:100%;
+        padding:12px;
+        border:1px solid var(--input-border);
+        border-radius:8px;
+        font-size:16px;
+        background:#fff;
+        color:#111827;
+        transition: border-color .2s, box-shadow .2s;
+      }
+      .field input::placeholder{ color:#9ca3af; }
+      .field input:focus{
+        outline:none;
+        border-color: var(--input-focus);
+        /* subtle focus ring; readable on both themes */
+        box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+      }
+      .pass-link, .signup-link{
+        text-align:center;
+        margin-top:10px;
+        font-size:.95rem;
+      }
+      .pass-link a, .signup-link a{
+        color: var(--link);
+        text-decoration:none;
+        font-weight:600;
+      }
+      .pass-link a:hover, .signup-link a:hover{ text-decoration:underline; }
+      .btn{ margin-top:18px; }
+      .btn input[type="submit"]{
+        width:100%;
+        padding:12px;
+        border:none;
+        border-radius:8px;
+        font-size:16px;
+        font-weight:700;
+        color:#fff;
+        background: var(--accent);
+        cursor:pointer;
+        transition: filter .15s, transform .05s;
+      }
+      .btn input[type="submit"]:hover{ filter:brightness(1.05); }
+      .btn input[type="submit"]:active{ transform: translateY(1px); }
+
+      /* ---------- FOOTER ---------- */
+      footer{
+        text-align:center;
+        padding: 8px 16px 24px;
+        color: var(--text-on-bg);
+        font-size:.92rem;
+      }
+      footer p{ opacity:.95; }
+      footer nav{ margin:6px 0; }
+      footer nav a{
+        margin: 0 6px;
+        color: var(--text-on-bg);
+        text-decoration:none;
+        opacity:.9;
+        font-weight:600;
+      }
+      footer nav a:hover{ text-decoration:underline; }
+
+      /* ---------- RESPONSIVE ---------- */
+      @media (max-width: 420px){
+        .wrapper{ padding:22px; }
+        header h1{ font-size:1.6rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Blogger</h1>
+      <p>Just geeks trying their hands at writing.</p>
+    </header>
+
+    <main>
+      <div class="wrapper">
+        <div class="title-text">
+          <p>
+            <strong>New to Blogger?</strong>
+          </p>
+        </div>
+
+        <div class="form-container">
+          <div class="slide-controls">
+            <input type="radio" name="slide" id="login" checked />
+            <input type="radio" name="slide" id="signup" />
+            <label for="login"  class="slide login">Login</label>
+            <label for="signup" class="slide signup">Sign Up</label>
+            <div class="slider-tab"></div>
+          </div>
+
+          <div class="form-inner" id="forms">
+            <!-- Login -->
+            <form action="#" class="login" novalidate>
+              <div class="field"><input type="email" id="signin-email" placeholder="Email Address" required /></div>
+              <div class="field"><input type="password" id="signin-password" placeholder="Password" required /></div>
+              <div class="pass-link"><a href="#">Reset password?</a></div>
+              <div class="field btn"><input type="submit" value="Login" onclick="signin()" /></div>
+              <div class="signup-link">Don't have an account? <a href="#" id="to-signup">Create one</a></div>
+            </form>
+
+            <!-- Sign Up -->
+            <form action="#" class="signup" novalidate>
+              <div class="field"><input type="email" id="signup-email" placeholder="Email Address" required /></div>
+              <div class="field"><input type="password" id="signup-password" placeholder="Password" required /></div>
+              <div class="field"><input type="password" id="signup-confirmpassword" placeholder="Confirm Password" required /></div>
+              <div class="field btn"><input type="submit" value="Sign Up" onclick="signup()"/></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>© 2025 Blogger. All rights reserved.</p>
+      <p>Made by Subhra Bikiran</p>
+      <nav>
+        <a href="#">About</a> |
+        <a href="#">Contact</a> |
+        <a href="#">Privacy Policy</a> |
+        <a href="#">Terms</a>
+      </nav>
+    </footer>
+
+    <script>
+      // --- slide logic ---
+      const loginRadio  = document.getElementById('login');
+      const signupRadio = document.getElementById('signup');
+      const forms       = document.getElementById('forms');
+      const toSignup    = document.getElementById('to-signup');
+
+      function updateSlide(){
+        forms.style.transform = signupRadio.checked ? 'translateX(-50%)' : 'translateX(0%)';
+      }
+      loginRadio.addEventListener('change', updateSlide);
+      signupRadio.addEventListener('change', updateSlide);
+      updateSlide();
+
+      // "Create one" -> switch to signup
+      toSignup.addEventListener('click', (e) => {
+        e.preventDefault();
+        signupRadio.checked = true;
+        updateSlide();
+      });
+
+      // --- Theme toggle hint ---
+      // Change <html data-theme="yellow"> to "blue" to try the blue theme.
+    </script>
+  </body>
+  <script src="signinScript.j"></script>
+</html>
