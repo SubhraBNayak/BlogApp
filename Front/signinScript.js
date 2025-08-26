@@ -16,9 +16,13 @@ async function signup(){
                 password : password
             })
             if (response.status == 200) {
-                alert("sign-up successful")
+                alert("sign-up successful");
+            }else if(response.status == 400){
+                alert("bad request, wrong/invalid email address sent by the user!");
+            }else if(response.status == 500){
+                alert("internal server error, no/bad response from the database");
             }else{
-                alert("try different email! User already exists!")
+                alert("kuch to hua! par pta nhi kya hua");
             }
         }else{
             alert("confirm password doesn't match!");
