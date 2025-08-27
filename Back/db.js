@@ -12,6 +12,10 @@ const User = new Schema({
     online : {type:Boolean, default:false}
 })
 
+const Blog = new Schema({
+    
+})
+
 const UserModel = mongoose.model('user', User);
 
 module.exports = {

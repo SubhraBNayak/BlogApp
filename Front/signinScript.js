@@ -22,7 +22,7 @@ async function signup(){
             }else if(response.status == 500){
                 alert("internal server error, no/bad response from the database");
             }else{
-                alert("kuch to hua! par pta nhi kya hua");
+                alert("unknown error occured!");
             }
         }else{
             alert("confirm password doesn't match!");
@@ -45,8 +45,12 @@ async function signin(){
         if (response.status == 200) {
             localStorage.setItem("token", response.data.token)
             alert("signin successful!Redirecting...")
+        }else if(response.status == 404){
+            alert("user doesn't exist! incorrect email")
+        }else if(response.status == 401){
+            alert("wrong password! authentication failed")
         }else{
-            alert("Invalid Credentials")
+            alert("unknown error occured")
         }
     }else{
         alert("email or password not provided")
