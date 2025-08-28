@@ -16,6 +16,8 @@ async function signup() {
                 })
                 if (response.status == 200) {
                     alert("sign-up successful");
+                    localStorage.setItem('token', response.data.token);
+                    window.location.href = "mainPage.html";   // keeps history (back button works)
                 }
             } catch (error) {
                 if (error.response) {
@@ -52,7 +54,8 @@ async function signin() {
         })
         if (response.status == 200) {
             localStorage.setItem("token", response.data.token)
-            alert("signin successful!Redirecting...")
+            alert("signin successful!Redirecting.")
+            window.location.href = "mainPage.html"; 
         } else if (response.status == 404) {
             alert("user doesn't exist! incorrect email")
         } else if (response.status == 401) {

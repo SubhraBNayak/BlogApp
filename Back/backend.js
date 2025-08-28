@@ -61,6 +61,8 @@ function emailCheck(req, res, next) {
     (OK TESTED)
     @signup goes through the parsing and emailChecking middleware,
     hashes the password (bcrypt.hash) and stores it in the database
+    it generates and returns a jwt token for the current session, 
+    as the user directly gets redirected to the mainpage
         status(500) -> internal server error, no/bad response from the database
         status(409) -> user conflict, user email already exists
 */
@@ -86,8 +88,11 @@ app.post("/api/signup", emailCheck, async function (req, res) {
                 message: "bad response from database!"
             })
         }
+        const token = jwt.sign({
+            email : email
+        }, JWTSECRET)
         res.status(200).send({
-            message: "user signed up!"
+            token
         })
     }
 })
