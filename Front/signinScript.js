@@ -15,31 +15,31 @@ async function signup() {
                     password: password
                 })
                 if (response.status == 200) {
-                    alert("sign-up successful");
+                    showToast("signin successful")
                     localStorage.setItem('token', response.data.token);
                     window.location.href = "mainPage.html";   // keeps history (back button works)
                 }
             } catch (error) {
                 if (error.response) {
                     if (error.response.status == 400) {
-                        alert("bad request, wrong/invalid email address sent by the user!");
+                        showToast("wrong email")
                     } else if (error.response.status == 500) {
-                        alert("internal server error, no/bad response from the database");
+                        showToast("bad response from server ")
                     } else if (error.response.status == 409) {
-                        alert("user already exists! try logging in");
+                        showToast("user already exists! ")
                     } else {
-                        alert("unknown error occured!");
+                        showToast("unknown error")
                     }
                 } else {
-                    alert("network error or server unrea    chable!");
+                    showToast("server unreachable")
                 }
             }
         } else {
-            alert("confirm password doesn't match!");
+            showToast("error- confirm password ")
             document.getElementById("signup-confirmpassword").value = "";
         }
     } else {
-        alert("email or password not provided")
+        showToast("email/pass not provided ")
     }
 }
 
@@ -48,22 +48,60 @@ async function signin() {
     const password = document.getElementById("signin-password").value
 
     if (email && password) {
-        const response = await axios.post("http://localhost:3000/api/signin", {
-            email: email,
-            password: password
-        })
-        if (response.status == 200) {
-            localStorage.setItem("token", response.data.token)
-            alert("signin successful!Redirecting.")
-            window.location.href = "mainPage.html"; 
-        } else if (response.status == 404) {
-            alert("user doesn't exist! incorrect email")
-        } else if (response.status == 401) {
-            alert("wrong password! authentication failed")
-        } else {
-            alert("unknown error occured")
-        }
+        try {
+            const response = await axios.post("http://localhost:3000/api/signin", {
+                email: email,
+                password: password
+            })
+            if (response.status == 200) {
+                localStorage.setItem("token", response.data.token)
+                showToast("signin successful ")
+                window.location.href = "mainPage.html"; 
+            }
+        }catch (error) {
+            if (error.response.status == 404) {
+                showToast("user doesn't exist! ")
+            } else if (error.response.status == 401) {
+                showToast("wrong password ")
+            } else {
+                showToast("unknown error ")
+            }
+        }    
     } else {
-        alert("email or password not provided")
+        showToast("email/pass not provided ")
+    }
+}
+
+/*
+    @publishBlog
+    fetches token and blogPost from localStorage, then uses axios.post to send the 
+    token and blogPost to the backend.
+        status codes used -> 200, 404, 503
+*/
+async function publishBlog(){
+    const token = localStorage.getItem('token');
+    const blogPost = JSON.parse(localStorage.getItem('blogDraft')); // OBJECT
+    try {
+        const response = await axios.post("http://localhost:3000/publishBlog",{
+            token : token,
+            title : blogPost.title,
+            content : blogPost.content,
+            subtitle : blogPost.subtitle
+        })
+        if (response.status==200) {
+            showToast("published! ")
+        }
+    } catch (error) {
+        if (error.response) {
+            if (error.response.status==503) {
+                showToast("server unreachable! ")
+            }else if(error.response.status==404){
+                showToast("user not found! ")
+            }else{
+                showToast("unknown error occured! ")
+            }
+        }else{
+            showToast("no response from the server! ")
+        }
     }
 }

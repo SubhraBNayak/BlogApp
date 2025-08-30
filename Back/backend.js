@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
 const path = require('path');
-const { UserModel } = require('./db');
+const { UserModel,BlogModel } = require('./db');
 
 const JWTSECRET = "developersOfBlogger"
 const app = express();
@@ -51,6 +51,24 @@ function emailCheck(req, res, next) {
     } else {
         res.status(400).send({
             message: "something wrong with the email."
+        })
+    }
+}
+
+/*
+    @jwtAuth is a middleware that takes the token from the frontend and verifies the token
+    using JWTSECRET.
+        req.email = gives you the user email if token verified
+*/
+async function jwtAuth(req, res, next){
+    const token = req.body.token;
+    try {
+        const email = jwt.verify(token, JWTSECRET).email;
+        req.email = email;
+        next();
+    } catch (error) {
+        res.status(401).send({
+            message : "token invalid, request can't be authenticated!"
         })
     }
 }
@@ -130,6 +148,47 @@ app.post("/api/signin", emailCheck, async function (req, res) {
     } else {
         res.status(404).send({
             message: "user doesn't exist!"
+        })
+    }
+})
+
+/*
+    @publishBlog, first verifies the token. Upon verification it uses the email gotten out of the token
+    to findOne user having that emailId, stores the OID of that user. sends the OID of the user along with 
+    the blogPost to the 'blogs' collection under 'blog-app-database'. This way we would be able to keep 
+    of the users and the blogs posted by them.
+        status(503) -> mongodb database unreachable 
+        status(404) -> user doesn't exist
+        status(200) -> blog published
+*/
+app.post("/publishBlog", jwtAuth, async function(req, res){
+    console.log("inside publishBlog endpoint");
+    const email = req.email;
+    const { title, subtitle, content } = req.body;
+    const user = await UserModel.findOne({
+        email : email
+    })
+    if (user) {
+        try {
+            const userOID = user._id;
+            const newBlog = await BlogModel.create({
+                userOID : userOID,
+                authorEmail : email,
+                title : title,
+                subtitle : subtitle,
+                content : content
+            })
+            res.status(200).send({
+                message : "you're published!"
+            })
+        } catch (error) {
+            res.status(503).send({
+                message : "database unreachable!"
+            })
+        }
+    }else{
+        res.status(404).send({
+            message : "user doesn't exist"
         })
     }
 })

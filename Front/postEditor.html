@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="yellow">
+  <head>
+    <meta charset="utf-8" />
+    <title>Blogger | Write Your Story</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+      /* ---------- MATCHING THEMES ---------- */
+      :root[data-theme="yellow"]{
+        --bg-gradient: linear-gradient(135deg, #ffe08a 0%, #f59e0b 50%, #d97706 100%);
+        --accent: #e09f3e;
+        --accent-light: #fbbf24;
+        --accent-dark: #d97706;
+        --text-on-bg: #111827;
+        --card-bg: #ffffff;
+        --card-text: #111827;
+        --muted: #6b7280;
+        --input-border: #cbd5e1;
+        --input-focus: #e09f3e;
+        --link: #b45309;
+        --success: #10b981;
+        --error: #ef4444;
+        --warning: #f59e0b;
+        --glass-bg: rgba(255, 255, 255, 0.25);
+        --glass-border: rgba(255, 255, 255, 0.18);
+        --shadow: rgba(0, 0, 0, 0.1);
+        --shadow-elevated: rgba(0, 0, 0, 0.25);
+        --editor-bg: rgba(255, 255, 255, 0.9);
+        --toolbar-bg: rgba(255, 255, 255, 0.95);
+      }
+
+      :root[data-theme="dark"]{
+        --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+        --accent: #fbbf24;
+        --accent-light: #fde047;
+        --accent-dark: #f59e0b;
+        --text-on-bg: #f8fafc;
+        --card-bg: #1e293b;
+        --card-text: #f8fafc;
+        --muted: #94a3b8;
+        --input-border: #475569;
+        --input-focus: #fbbf24;
+        --link: #fbbf24;
+        --success: #10b981;
+        --error: #ef4444;
+        --warning: #f59e0b;
+        --glass-bg: rgba(30, 41, 59, 0.25);
+        --glass-border: rgba(148, 163, 184, 0.18);
+        --shadow: rgba(0, 0, 0, 0.3);
+        --shadow-elevated: rgba(0, 0, 0, 0.6);
+        --editor-bg: rgba(30, 41, 59, 0.9);
+        --toolbar-bg: rgba(30, 41, 59, 0.95);
+      }
+
+      /* ---------- BASE ---------- */
+      *{ box-sizing: border-box; margin:0; padding:0; }
+
+      body{
+        font-family: 'Raleway', sans-serif;
+        background: var(--bg-gradient);
+        background-attachment: fixed;
+        color: var(--text-on-bg);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* Animated background particles */
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+          radial-gradient(circle at 20% 50%, rgba(224, 159, 62, 0.08) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(245, 158, 11, 0.08) 0%, transparent 50%),
+          radial-gradient(circle at 40% 80%, rgba(251, 191, 36, 0.08) 0%, transparent 50%);
+        animation: backgroundFlow 25s ease-in-out infinite;
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      [data-theme="dark"] body::before {
+        background: 
+          radial-gradient(circle at 20% 50%, rgba(251, 191, 36, 0.03) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(245, 158, 11, 0.03) 0%, transparent 50%),
+          radial-gradient(circle at 40% 80%, rgba(253, 224, 71, 0.03) 0%, transparent 50%);
+      }
+
+      @keyframes backgroundFlow {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        33% { transform: translate(20px, -20px) rotate(120deg); }
+        66% { transform: translate(-15px, 15px) rotate(240deg); }
+      }
+
+      /* ---------- HEADER ---------- */
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--glass-bg);
+        backdrop-filter: blur(25px);
+        border-bottom: 1px solid var(--glass-border);
+        padding: 16px 24px;
+        animation: headerSlideDown 0.8s ease-out;
+      }
+
+      @keyframes headerSlideDown {
+        from { transform: translateY(-100%); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+
+      .header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .back-btn {
+        background: var(--glass-bg);
+        border: 2px solid var(--glass-border);
+        color: var(--card-text);
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        backdrop-filter: blur(20px);
+      }
+
+      .back-btn:hover {
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(224, 159, 62, 0.3);
+      }
+
+      .editor-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--card-text);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .editor-title svg {
+        width: 24px;
+        height: 24px;
+        fill: var(--accent);
+      }
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .word-count {
+        background: var(--glass-bg);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--muted);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+      }
+
+      .theme-toggle {
+        background: var(--glass-bg);
+        border: 2px solid var(--glass-border);
+        border-radius: 25px;
+        padding: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 70px;
+        height: 38px;
+        backdrop-filter: blur(20px);
+        position: relative;
+      }
+
+      .theme-toggle:hover {
+        border-color: var(--accent);
+        background: var(--accent);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(224, 159, 62, 0.3);
+      }
+
+      .theme-slider {
+        position: absolute;
+        width: 26px;
+        height: 26px;
+        background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+        border-radius: 50%;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(224, 159, 62, 0.4);
+        left: 3px;
+      }
+
+      [data-theme="dark"] .theme-slider {
+        transform: translateX(32px);
+      }
+
+      .theme-icon {
+        width: 14px;
+        height: 14px;
+        fill: white;
+        transition: transform 0.3s ease;
+      }
+
+      .auto-save-status {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.8rem;
+        color: var(--success);
+        font-weight: 500;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .auto-save-status.show {
+        opacity: 1;
+      }
+
+      .auto-save-status svg {
+        width: 14px;
+        height: 14px;
+        fill: currentColor;
+      }
+
+      /* ---------- MAIN EDITOR CONTAINER ---------- */
+      .editor-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 40px 24px;
+        animation: editorSlideUp 1s ease-out 0.3s both;
+      }
+
+      @keyframes editorSlideUp {
+        from { opacity: 0; transform: translateY(50px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      /* ---------- TITLE SECTION ---------- */
+      .title-section {
+        background: var(--glass-bg);
+        backdrop-filter: blur(25px);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 32px 40px;
+        margin-bottom: 24px;
+        box-shadow: 0 20px 60px var(--shadow);
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .title-section::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, transparent, rgba(224, 159, 62, 0.1), transparent);
+        border-radius: 20px;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .title-section:focus-within::before {
+        opacity: 1;
+        animation: shimmer 2s ease-in-out infinite;
+      }
+
+      @keyframes shimmer {
+        0%, 100% { opacity: 0.5; }
+        50% { opacity: 1; }
+      }
+
+      .title-section:focus-within {
+        transform: translateY(-4px);
+        box-shadow: 0 25px 80px var(--shadow-elevated);
+      }
+
+      .title-input {
+        width: 100%;
+        border: none;
+        background: transparent;
+        font-size: 2.5rem;
+        font-weight: 800;
+        font-family: 'Raleway', sans-serif;
+        color: var(--card-text);
+        line-height: 1.2;
+        resize: none;
+        outline: none;
+        min-height: 80px;
+      }
+
+      .title-input::placeholder {
+        color: var(--muted);
+        font-style: italic;
+      }
+
+      .subtitle-input {
+        width: 100%;
+        border: none;
+        background: transparent;
+        font-size: 1.2rem;
+        font-weight: 500;
+        font-family: 'Raleway', sans-serif;
+        color: var(--muted);
+        line-height: 1.4;
+        resize: none;
+        outline: none;
+        margin-top: 12px;
+        min-height: 50px;
+      }
+
+      .subtitle-input::placeholder {
+        color: var(--muted);
+        opacity: 0.7;
+        font-style: italic;
+      }
+
+      /* ---------- FORMATTING TOOLBAR ---------- */
+      .toolbar {
+        background: var(--toolbar-bg);
+        backdrop-filter: blur(25px);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 16px 24px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        box-shadow: 0 12px 40px var(--shadow);
+        position: sticky;
+        top: 80px;
+        z-index: 90;
+        transition: all 0.3s ease;
+      }
+
+      .toolbar:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 50px var(--shadow-elevated);
+      }
+
+      .toolbar-group {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding-right: 12px;
+        border-right: 1px solid var(--glass-border);
+      }
+
+      .toolbar-group:last-child {
+        border-right: none;
+      }
+
+      .toolbar-btn {
+        background: transparent;
+        border: 2px solid transparent;
+        color: var(--card-text);
+        padding: 10px 12px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 14px;
+        position: relative;
+        min-width: 40px;
+        height: 40px;
+      }
+
+      .toolbar-btn svg {
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+      }
+
+      .toolbar-btn:hover {
+        background: var(--glass-bg);
+        border-color: var(--accent);
+        color: var(--accent);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(224, 159, 62, 0.2);
+      }
+
+      .toolbar-btn.active {
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
+        box-shadow: 0 4px 15px rgba(224, 159, 62, 0.4);
+      }
+
+      .toolbar-btn.active:hover {
+        filter: brightness(1.1);
+      }
+
+      .toolbar-divider {
+        width: 1px;
+        height: 24px;
+        background: var(--glass-border);
+        margin: 0 8px;
+      }
+
+      /* ---------- MAIN EDITOR ---------- */
+      .editor-section {
+        background: var(--editor-bg);
+        backdrop-filter: blur(25px);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 40px;
+        margin-bottom: 24px;
+        box-shadow: 0 20px 60px var(--shadow);
+        transition: all 0.3s ease;
+        position: relative;
+        min-height: 600px;
+      }
+
+      .editor-section:focus-within {
+        transform: translateY(-4px);
+        box-shadow: 0 25px 80px var(--shadow-elevated);
+        border-color: var(--accent);
+      }
+
+      .content-editor {
+        width: 100%;
+        border: none;
+        background: transparent;
+        font-size: 1.1rem;
+        font-weight: 400;
+        font-family: 'Inter', sans-serif;
+        color: var(--card-text);
+        line-height: 1.8;
+        resize: none;
+        outline: none;
+        min-height: 500px;
+      }
+
+      .content-editor::placeholder {
+        color: var(--muted);
+        font-style: italic;
+      }
+
+      /* Rich text editor styles */
+      .editor-content {
+        width: 100%;
+        min-height: 500px;
+        border: none;
+        outline: none;
+        font-size: 1.1rem;
+        font-family: 'Inter', sans-serif;
+        line-height: 1.8;
+        color: var(--card-text);
+        background: transparent;
+      }
+
+      .editor-content:empty::before {
+        content: 'Start writing your story...';
+        color: var(--muted);
+        font-style: italic;
+        pointer-events: none;
+      }
+
+      .editor-content h1, .editor-content h2, .editor-content h3 {
+        font-family: 'Raleway', sans-serif;
+        font-weight: 700;
+        margin: 24px 0 16px 0;
+      }
+
+      .editor-content h1 { font-size: 1.8rem; }
+      .editor-content h2 { font-size: 1.5rem; }
+      .editor-content h3 { font-size: 1.3rem; }
+
+      .editor-content p {
+        margin: 16px 0;
+      }
+
+      .editor-content strong {
+        font-weight: 700;
+      }
+
+      .editor-content em {
+        font-style: italic;
+      }
+
+      .editor-content blockquote {
+        border-left: 4px solid var(--accent);
+        padding-left: 20px;
+        margin: 20px 0;
+        font-style: italic;
+        color: var(--muted);
+      }
+
+      .editor-content ul, .editor-content ol {
+        padding-left: 24px;
+        margin: 16px 0;
+      }
+
+      .editor-content li {
+        margin: 8px 0;
+      }
+
+      .editor-content a {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .editor-content a:hover {
+        text-decoration: underline;
+      }
+
+      /* ---------- ACTION BUTTONS ---------- */
+      .action-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .action-left {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .action-right {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .save-draft-btn {
+        background: var(--glass-bg);
+        border: 2px solid var(--glass-border);
+        color: var(--card-text);
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        backdrop-filter: blur(20px);
+      }
+
+      .save-draft-btn:hover {
+        background: var(--muted);
+        color: white;
+        border-color: var(--muted);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(107, 114, 128, 0.3);
+      }
+
+      .preview-btn {
+        background: var(--glass-bg);
+        border: 2px solid var(--glass-border);
+        color: var(--card-text);
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        backdrop-filter: blur(20px);
+      }
+
+      .preview-btn:hover {
+        background: var(--accent-light);
+        color: white;
+        border-color: var(--accent-light);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(251, 191, 36, 0.3);
+      }
+
+      .publish-btn {
+        background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+        border: none;
+        color: white;
+        padding: 16px 32px;
+        border-radius: 30px;
+        font-weight: 800;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 8px 25px rgba(224, 159, 62, 0.4);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .publish-btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 0.6s ease;
+      }
+
+      .publish-btn:active::before {
+        width: 300px;
+        height: 300px;
+      }
+
+      .publish-btn:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 40px rgba(224, 159, 62, 0.5);
+        filter: brightness(1.1);
+      }
+
+      .publish-btn svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+      }
+
+      /* ---------- TOAST NOTIFICATIONS ---------- */
+      .toast-container {
+        position: fixed;
+        top: 100px;
+        right: 24px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .toast {
+        background: var(--glass-bg);
+        backdrop-filter: blur(25px);
+        color: var(--card-text);
+        padding: 18px 24px;
+        border-radius: 16px;
+        box-shadow: 0 12px 40px var(--shadow-elevated);
+        border-left: 4px solid var(--success);
+        border: 1px solid var(--glass-border);
+        transform: translateX(400px);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        max-width: 350px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .toast.show {
+        transform: translateX(0);
+        animation: toastSlideIn 0.5s ease-out;
+      }
+
+      @keyframes toastSlideIn {
+        from { 
+          transform: translateX(400px) rotate(10deg); 
+          opacity: 0; 
+        }
+        to { 
+          transform: translateX(0) rotate(0deg); 
+          opacity: 1; 
+        }
+      }
+
+      .toast.error { border-left-color: var(--error); }
+      .toast.warning { border-left-color: var(--warning); }
+
+      .toast-icon {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+        flex-shrink: 0;
+      }
+
+      .toast-close {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        color: var(--muted);
+        padding: 4px;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+      }
+
+      .toast-close:hover {
+        background: var(--error);
+        color: white;
+      }
+
+      /* ---------- LOADING OVERLAY ---------- */
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(6px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
+
+      .loading-spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid rgba(224, 159, 62, 0.3);
+        border-left-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      .loading-text {
+        color: white;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      /* ---------- KEYBOARD SHORTCUTS MODAL ---------- */
+      .shortcuts-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9998;
+      }
+
+      .shortcuts-content {
+        background: var(--glass-bg);
+        backdrop-filter: blur(25px);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 32px;
+        max-width: 500px;
+        width: 90%;
+        max-height: 80%;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px var(--shadow-elevated);
+      }
+
+      .shortcuts-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+
+      .shortcuts-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--card-text);
+      }
+
+      .shortcuts-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--muted);
+        padding: 4px;
+      }
+
+      .shortcut-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--glass-border);
+      }
+
+      .shortcut-item:last-child {
+        border-bottom: none;
+      }
+
+      .shortcut-desc {
+        color: var(--card-text);
+        font-weight: 500;
+      }
+
+      .shortcut-key {
+        background: var(--glass-bg);
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-family: monospace;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--accent);
+        border: 1px solid var(--glass-border);
+      }
+
+      /* ---------- RESPONSIVE DESIGN ---------- */
+      @media (max-width: 768px) {
+        .header-content {
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .editor-container {
+          padding: 20px 16px;
+        }
+
+        .title-section,
+        .editor-section {
+          padding: 24px 20px;
+        }
+
+        .title-input {
+          font-size: 2rem;
+        }
+
+        .toolbar {
+          padding: 12px 16px;
+          position: static;
+          top: auto;
+        }
+
+        .toolbar-group {
+          flex-wrap: wrap;
+        }
+
+        .action-bar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .action-left,
+        .action-right {
+          justify-content: center;
+        }
+
+        .publish-btn {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .word-count {
+          order: -1;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .title-input {
+          font-size: 1.6rem;
+        }
+
+        .content-editor,
+        .editor-content {
+          font-size: 1rem;
+        }
+
+        .shortcuts-content {
+          padding: 24px 20px;
+        }
+      }
+
+      /* ---------- ACCESSIBILITY IMPROVEMENTS ---------- */
+      button:focus,
+      input:focus,
+      textarea:focus {
+        outline: 3px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      /* ---------- SELECTION STYLING ---------- */
+      ::selection {
+        background: var(--accent);
+        color: white;
+      }
+
+      ::-moz-selection {
+        background: var(--accent);
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Publishing your story...</div>
+    </div>
+
+    <!-- Keyboard Shortcuts Modal -->
+    <div class="shortcuts-modal" id="shortcutsModal">
+      <div class="shortcuts-content">
+        <div class="shortcuts-header">
+          <h2 class="shortcuts-title">Keyboard Shortcuts</h2>
+          <button class="shortcuts-close" id="shortcutsClose">×</button>
+        </div>
+        <div class="shortcut-item">
+          <span class="shortcut-desc">Bold text</span>
+          <span class="shortcut-key">Ctrl + B</span>
+        </div>
+        <div class="shortcut-item">
+          <span class="shortcut-desc">Italic text</span>
+          <span class="shortcut-key">Ctrl + I</span>
+        </div>
+        <div class="shortcut-item">
+          <span class="shortcut-desc">Save draft</span>
+          <span class="shortcut-key">Ctrl + S</span>
+        </div>
+        <div class="shortcut-item">
+          <span class="shortcut-desc">Publish</span>
+          <span class="shortcut-key">Ctrl + Enter</span>
+        </div>
+        <div class="shortcut-item">
+          <span class="shortcut-desc">Preview</span>
+          <span class="shortcut-key">Ctrl + P</span>
+        </div>
+        <div class="shortcut-item">
+          <span class="shortcut-desc">Insert heading</span>
+          <span class="shortcut-key">Ctrl + H</span>
+        </div>
+        <div class="shortcut-item">
+          <span class="shortcut-desc">Show shortcuts</span>
+          <span class="shortcut-key">Ctrl + ?</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <div class="header-left">
+          <a href="#" class="back-btn" id="backBtn">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+              <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"/>
+            </svg>
+            Back
+          </a>
+          <div class="editor-title">
+            <svg viewBox="0 0 24 24">
+              <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            </svg>
+            Write Your Story
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div class="word-count" id="wordCount">0 words</div>
+          <div class="auto-save-status" id="autoSaveStatus">
+            <svg viewBox="0 0 24 24">
+              <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+            </svg>
+            Saved
+          </div>
+          <div class="theme-toggle" id="themeToggle" title="Toggle theme">
+            <div class="theme-slider">
+              <svg class="theme-icon" viewBox="0 0 24 24" id="themeIcon">
+                <path d="M12,18C11.11,18 10.26,17.8 9.5,17.45C11.56,16.5 13,14.42 13,12C13,9.58 11.56,7.5 9.5,6.55C10.26,6.2 11.11,6 12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18M20,8.69V4H15.31L12,0.69L8.69,4H4V8.69L0.69,12L4,15.31V20H8.69L12,23.31L15.31,20H20V15.31L23.31,12L20,8.69Z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Editor -->
+    <div class="editor-container">
+      <!-- Title Section -->
+      <div class="title-section">
+        <textarea 
+          class="title-input" 
+          id="titleInput" 
+          placeholder="Your amazing title here..."
+          maxlength="100"
+        ></textarea>
+        <textarea 
+          class="subtitle-input" 
+          id="subtitleInput" 
+          placeholder="Add a compelling subtitle (optional)..."
+          maxlength="200"
+        ></textarea>
+      </div>
+
+      <!-- Formatting Toolbar -->
+      <div class="toolbar">
+        <div class="toolbar-group">
+          <button class="toolbar-btn" id="boldBtn" title="Bold (Ctrl+B)">
+            <svg viewBox="0 0 24 24">
+              <path d="M13.5,15.5H10V12.5H13.5A1.5,1.5 0 0,1 15,14A1.5,1.5 0 0,1 13.5,15.5M10,6.5H13A1.5,1.5 0 0,1 14.5,8A1.5,1.5 0 0,1 13,9.5H10M15.6,10.79C16.57,10.11 17.25,9.02 17.25,8C17.25,5.74 15.5,4 13.25,4H7V18H14.04C16.14,18 17.75,16.3 17.75,14.21C17.75,12.69 16.89,11.39 15.6,10.79Z"/>
+            </svg>
+          </button>
+          <button class="toolbar-btn" id="italicBtn" title="Italic (Ctrl+I)">
+            <svg viewBox="0 0 24 24">
+              <path d="M10,4V7H12.21L8.79,15H6V18H14V15H11.79L15.21,7H18V4H10Z"/>
+            </svg>
+          </button>
+          <button class="toolbar-btn" id="underlineBtn" title="Underline (Ctrl+U)">
+            <svg viewBox="0 0 24 24">
+              <path d="M5,21H19V19H5V21M12,17A6,6 0 0,0 18,11V3H15.5V11A3.5,3.5 0 0,1 12,14.5A3.5,3.5 0 0,1 8.5,11V3H6V11A6,6 0 0,0 12,17Z"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="toolbar-group">
+          <button class="toolbar-btn" id="h1Btn" title="Heading 1">H1</button>
+          <button class="toolbar-btn" id="h2Btn" title="Heading 2">H2</button>
+          <button class="toolbar-btn" id="h3Btn" title="Heading 3">H3</button>
+        </div>
+
+        <div class="toolbar-group">
+          <button class="toolbar-btn" id="bulletBtn" title="Bullet List">
+            <svg viewBox="0 0 24 24">
+              <path d="M7,5H21V7H7V5M7,13V11H21V13H7M4,4.5A1.5,1.5 0 0,1 5.5,6A1.5,1.5 0 0,1 4,7.5A1.5,1.5 0 0,1 2.5,6A1.5,1.5 0 0,1 4,4.5M4,10.5A1.5,1.5 0 0,1 5.5,12A1.5,1.5 0 0,1 4,13.5A1.5,1.5 0 0,1 2.5,12A1.5,1.5 0 0,1 4,10.5M7,19V17H21V19H7M4,16.5A1.5,1.5 0 0,1 5.5,18A1.5,1.5 0 0,1 4,19.5A1.5,1.5 0 0,1 2.5,18A1.5,1.5 0 0,1 4,16.5Z"/>
+            </svg>
+          </button>
+          <button class="toolbar-btn" id="numberBtn" title="Numbered List">
+            <svg viewBox="0 0 24 24">
+              <path d="M7,13V11H21V13H7M7,19V17H21V19H7M7,7V5H21V7H7M3,8V5H2V4H4V8H3M2,17V16H5V20H2V19H4V18.5H3V17.5H4V17H2M4.25,10A0.75,0.75 0 0,1 5,10.75C5,10.95 4.92,11.14 4.79,11.27L3.12,13H5V14H2V13.08L4,11H2V10H4.25Z"/>
+            </svg>
+          </button>
+          <button class="toolbar-btn" id="quoteBtn" title="Quote">
+            <svg viewBox="0 0 24 24">
+              <path d="M14,17H17L19,13V7H13V13H16M6,17H9L11,13V7H5V13H8L6,17Z"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="toolbar-group">
+          <button class="toolbar-btn" id="linkBtn" title="Insert Link">
+            <svg viewBox="0 0 24 24">
+              <path d="M3.9,12C3.9,10.29 5.29,8.9 7,8.9H11V7H7A5,5 0 0,0 2,12A5,5 0 0,0 7,17H11V15.1H7C5.29,15.1 3.9,13.71 3.9,12M8,13H16V11H8V13M17,7H13V8.9H17C18.71,8.9 20.1,10.29 20.1,12C20.1,13.71 18.71,15.1 17,15.1H13V17H17A5,5 0 0,0 22,12A5,5 0 0,0 17,7Z"/>
+            </svg>
+          </button>
+          <button class="toolbar-btn" id="codeBtn" title="Code Block">
+            <svg viewBox="0 0 24 24">
+              <path d="M8,3A2,2 0 0,0 6,5V9A2,2 0 0,1 4,11H3V13H4A2,2 0 0,1 6,15V19A2,2 0 0,0 8,21H10V19H8V14A2,2 0 0,0 6,12A2,2 0 0,0 8,10V5H10V3M16,3A2,2 0 0,1 18,5V9A2,2 0 0,0 20,11H21V13H20A2,2 0 0,0 18,15V19A2,2 0 0,1 16,21H14V19H16V14A2,2 0 0,1 18,12A2,2 0 0,1 16,10V5H14V3H16Z"/>
+            </svg>
+          </button>
+          <button class="toolbar-btn" id="shortcutsBtn" title="Keyboard Shortcuts (Ctrl+?)">
+            <svg viewBox="0 0 24 24">
+              <path d="M11,18H13V16H11V18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,6A4,4 0 0,0 8,10H10A2,2 0 0,1 12,8A2,2 0 0,1 14,10C14,12 11,11.75 11,15H13C13,12.75 16,12.5 16,10A4,4 0 0,0 12,6Z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Editor Section -->
+      <div class="editor-section">
+        <div 
+          class="editor-content" 
+          id="editorContent" 
+          contenteditable="true"
+          data-placeholder="Start writing your story..."
+        ></div>
+      </div>
+
+      <!-- Action Bar -->
+      <div class="action-bar">
+        <div class="action-left">
+          <button class="save-draft-btn" id="saveDraftBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"/>
+            </svg>
+            Save Draft
+          </button>
+        </div>
+
+        <div class="action-right">
+          <button class="preview-btn" id="previewBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"/>
+            </svg>
+            Preview
+          </button>
+ 
+          <button class="publish-btn" id="publishBtn" onclick="publishBlog()">
+            <svg viewBox="0 0 24 24">
+              <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/>
+            </svg>
+            Publish Story
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // === THEME MANAGEMENT ===
+      const themeToggle = document.getElementById('themeToggle');
+      const themeIcon = document.getElementById('themeIcon');
+      const html = document.documentElement;
+
+      const savedTheme = localStorage.getItem('theme') || 'yellow';
+      html.setAttribute('data-theme', savedTheme);
+      updateThemeIcon(savedTheme);
+
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'yellow' ? 'dark' : 'yellow';
+
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcon(newTheme);
+
+        showToast(`Switched to ${newTheme} theme`, 'success');
+      });
+
+      function updateThemeIcon(theme) {
+        if (theme === 'dark') {
+          themeIcon.innerHTML = '<path d="M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8M12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18M20,8.69V4H15.31L12,0.69L8.69,4H4V8.69L0.69,12L4,15.31V20H8.69L12,23.31L15.31,20H20V15.31L23.31,12L20,8.69Z"/>';
+        } else {
+          themeIcon.innerHTML = '<path d="M12,18C11.11,18 10.26,17.8 9.5,17.45C11.56,16.5 13,14.42 13,12C13,9.58 11.56,7.5 9.5,6.55C10.26,6.2 11.11,6 12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18M20,8.69V4H15.31L12,0.69L8.69,4H4V8.69L0.69,12L4,15.31V20H8.69L12,23.31L15.31,20H20V15.31L23.31,12L20,8.69Z"/>';
+        }
+      }
+
+      // === EDITOR STATE MANAGEMENT ===
+      const titleInput = document.getElementById('titleInput');
+      const subtitleInput = document.getElementById('subtitleInput');
+      const editorContent = document.getElementById('editorContent');
+      const wordCountElement = document.getElementById('wordCount');
+      const autoSaveStatus = document.getElementById('autoSaveStatus');
+
+      let isDirty = false;
+      let autoSaveTimer;
+
+      // === WORD COUNT ===
+      function updateWordCount() {
+        const title = titleInput.value.trim();
+        const subtitle = subtitleInput.value.trim();
+        const content = editorContent.textContent.trim();
+
+        const titleWords = title ? title.split(/\s+/).length : 0;
+        const subtitleWords = subtitle ? subtitle.split(/\s+/).length : 0;
+        const contentWords = content ? content.split(/\s+/).length : 0;
+
+        const totalWords = titleWords + subtitleWords + contentWords;
+        wordCountElement.textContent = `${totalWords} word${totalWords !== 1 ? 's' : ''}`;
+      }
+
+      // === AUTO SAVE ===
+      function showAutoSaveStatus() {
+        autoSaveStatus.classList.add('show');
+        setTimeout(() => {
+          autoSaveStatus.classList.remove('show');
+        }, 2000);
+      }
+
+      function autoSave() {
+        if (!isDirty) return;
+
+        const postData = {
+          title: titleInput.value,
+          subtitle: subtitleInput.value,
+          content: editorContent.innerHTML,
+          timestamp: new Date().toISOString()
+        };
+
+        localStorage.setItem('blogDraft', JSON.stringify(postData));
+        isDirty = false;
+        showAutoSaveStatus();
+      }
+
+      function scheduleAutoSave() {
+        isDirty = true;
+        clearTimeout(autoSaveTimer);
+        autoSaveTimer = setTimeout(autoSave, 2000);
+      }
+
+      // === EVENT LISTENERS FOR AUTO SAVE ===
+      titleInput.addEventListener('input', () => {
+        updateWordCount();
+        scheduleAutoSave();
+      });
+
+      subtitleInput.addEventListener('input', () => {
+        updateWordCount();
+        scheduleAutoSave();
+      });
+
+      editorContent.addEventListener('input', () => {
+        updateWordCount();
+        scheduleAutoSave();
+      });
+
+      // === FORMATTING TOOLBAR ===
+      function execCommand(command, value = null) {
+        document.execCommand(command, false, value);
+        editorContent.focus();
+        scheduleAutoSave();
+      }
+
+      function toggleFormatting(command, buttonId) {
+        const button = document.getElementById(buttonId);
+        const isActive = document.queryCommandState(command);
+
+        if (isActive) {
+          button.classList.remove('active');
+        } else {
+          button.classList.add('active');
+        }
+
+        execCommand(command);
+      }
+
+      // Toolbar button event listeners
+      document.getElementById('boldBtn').addEventListener('click', () => {
+        toggleFormatting('bold', 'boldBtn');
+      });
+
+      document.getElementById('italicBtn').addEventListener('click', () => {
+        toggleFormatting('italic', 'italicBtn');
+      });
+
+      document.getElementById('underlineBtn').addEventListener('click', () => {
+        toggleFormatting('underline', 'underlineBtn');
+      });
+
+      document.getElementById('h1Btn').addEventListener('click', () => {
+        execCommand('formatBlock', '<h1>');
+      });
+
+      document.getElementById('h2Btn').addEventListener('click', () => {
+        execCommand('formatBlock', '<h2>');
+      });
+
+      document.getElementById('h3Btn').addEventListener('click', () => {
+        execCommand('formatBlock', '<h3>');
+      });
+
+      document.getElementById('bulletBtn').addEventListener('click', () => {
+        execCommand('insertUnorderedList');
+      });
+
+      document.getElementById('numberBtn').addEventListener('click', () => {
+        execCommand('insertOrderedList');
+      });
+
+      document.getElementById('quoteBtn').addEventListener('click', () => {
+        execCommand('formatBlock', '<blockquote>');
+      });
+
+      document.getElementById('linkBtn').addEventListener('click', () => {
+        const url = prompt('Enter URL:');
+        if (url) {
+          execCommand('createLink', url);
+        }
+      });
+
+      document.getElementById('codeBtn').addEventListener('click', () => {
+        execCommand('formatBlock', '<pre>');
+      });
+
+      // === KEYBOARD SHORTCUTS ===
+      document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey || e.metaKey) {
+          switch (e.key.toLowerCase()) {
+            case 'b':
+              e.preventDefault();
+              toggleFormatting('bold', 'boldBtn');
+              break;
+            case 'i':
+              e.preventDefault();
+              toggleFormatting('italic', 'italicBtn');
+              break;
+            case 'u':
+              e.preventDefault();
+              toggleFormatting('underline', 'underlineBtn');
+              break;
+            case 's':
+              e.preventDefault();
+              saveDraft();
+              break;
+            case 'enter':
+              e.preventDefault();
+              publishPost();
+              break;
+            case 'p':
+              e.preventDefault();
+              previewPost();
+              break;
+            case 'h':
+              e.preventDefault();
+              execCommand('formatBlock', '<h2>');
+              break;
+            case '/':
+            case '?':
+              e.preventDefault();
+              showKeyboardShortcuts();
+              break;
+          }
+        }
+      });
+
+      // === TOAST NOTIFICATIONS ===
+      function showToast(message, type = 'success') {
+        const toastContainer = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+
+        const icons = {
+          success: '<path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.41,10.09L6,11.5L11,16.5Z"/>',
+          error: '<path d="M13,14H11V10H13M13,18H11V16H13M1,21H23L12,2L1,21Z"/>',
+          warning: '<path d="M13,14H11V10H13M13,18H11V16H13M1,21H23L12,2L1,21Z"/>'
+        };
+
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `
+          <svg class="toast-icon" viewBox="0 0 24 24">${icons[type]}</svg>
+          ${message}
+          <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+        `;
+
+        toastContainer.appendChild(toast);
+
+        setTimeout(() => toast.classList.add('show'), 100);
+
+        setTimeout(() => {
+          toast.classList.remove('show');
+          setTimeout(() => toast.remove(), 300);
+        }, 4000);
+      }
+
+      // === LOADING OVERLAY ===
+      function showLoading(message = 'Publishing your story...') {
+        const loadingText = document.querySelector('.loading-text');
+        loadingText.textContent = message;
+        document.getElementById('loadingOverlay').style.display = 'flex';
+      }
+
+      function hideLoading() {
+        document.getElementById('loadingOverlay').style.display = 'none';
+      }
+
+      // === KEYBOARD SHORTCUTS MODAL ===
+      const shortcutsModal = document.getElementById('shortcutsModal');
+      const shortcutsBtn = document.getElementById('shortcutsBtn');
+      const shortcutsClose = document.getElementById('shortcutsClose');
+
+      function showKeyboardShortcuts() {
+        shortcutsModal.style.display = 'flex';
+      }
+
+      function hideKeyboardShortcuts() {
+        shortcutsModal.style.display = 'none';
+      }
+
+      shortcutsBtn.addEventListener('click', showKeyboardShortcuts);
+      shortcutsClose.addEventListener('click', hideKeyboardShortcuts);
+      shortcutsModal.addEventListener('click', (e) => {
+        if (e.target === shortcutsModal) {
+          hideKeyboardShortcuts();
+        }
+      });
+
+      // === ACTION BUTTONS ===
+      function saveDraft() {
+        if (!titleInput.value.trim() && !editorContent.textContent.trim()) {
+          showToast('Nothing to save yet. Start writing!', 'warning');
+          return;
+        }
+
+        showLoading('Saving draft...');
+
+        // Simulate API call
+        setTimeout(() => {
+          autoSave();
+          hideLoading();  
+          showToast('Draft saved successfully!', 'success');
+        }, 1000);
+      }
+
+      function previewPost() {
+        const title = titleInput.value.trim();
+        const subtitle = subtitleInput.value.trim();
+        const content = editorContent.innerHTML;
+
+        if (!title && !content) {
+          showToast('Add some content to preview!', 'warning');
+          return;
+        }
+
+        // Create preview window
+        const previewWindow = window.open('', '_blank', 'width=800,height=600');
+        const previewHTML = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Preview: ${title || 'Untitled'}</title>
+            <style>
+              body { 
+                font-family: 'Inter', sans-serif; 
+                max-width: 800px; 
+                margin: 0 auto; 
+                padding: 40px 20px; 
+                line-height: 1.8;
+                color: #333;
+              }
+              h1 { 
+                font-size: 2.5rem; 
+                font-weight: 800; 
+                margin-bottom: 16px; 
+                color: #111;
+              }
+              .subtitle { 
+                font-size: 1.2rem; 
+                color: #666; 
+                margin-bottom: 32px; 
+                font-style: italic;
+              }
+              .content { font-size: 1.1rem; }
+              h2, h3 { font-weight: 700; margin: 24px 0 16px 0; }
+              p { margin: 16px 0; }
+              blockquote { 
+                border-left: 4px solid #e09f3e; 
+                padding-left: 20px; 
+                margin: 20px 0; 
+                font-style: italic; 
+                color: #666;
+              }
+              ul, ol { padding-left: 24px; margin: 16px 0; }
+              li { margin: 8px 0; }
+              a { color: #e09f3e; text-decoration: none; font-weight: 600; }
+              a:hover { text-decoration: underline; }
+            </style>
+          </head>
+          <body>
+            ${title ? `<h1>${title}</h1>` : ''}
+            ${subtitle ? `<div class="subtitle">${subtitle}</div>` : ''}
+            <div class="content">${content}</div>
+          </body>
+          </html>
+        `;
+
+        previewWindow.document.write(previewHTML);
+        previewWindow.document.close();
+        showToast('Preview opened in new window', 'success');
+      }
+
+    //   function publishPost() {
+    //     const title = titleInput.value.trim();
+    //     const content = editorContent.textContent.trim();
+
+    //     if (!title) {
+    //       showToast('Please add a title before publishing', 'error');
+    //       titleInput.focus();
+    //       return;
+    //     }
+
+    //     if (!content) {
+    //       showToast('Please add some content before publishing', 'error');
+    //       editorContent.focus();
+    //       return;
+    //     }
+
+    //     if (content.split(/\s+/).length < 50) {
+    //       if (!confirm('Your post is quite short. Are you sure you want to publish?')) {
+    //         return;
+    //       }
+    //     }
+
+    //     showLoading('Publishing your story...');
+
+    //     const postData = {
+    //       title: titleInput.value,
+    //       subtitle: subtitleInput.value,
+    //       content: editorContent.innerHTML,
+    //       wordCount: content.split(/\s+/).length,
+    //       publishedAt: new Date().toISOString()
+    //     };
+
+    //     // HERE: Add your actual publish logic
+    //     // Example:
+    //     // publishToBackend(postData)
+    //     //   .then(response => {
+    //     //     hideLoading();
+    //     //     showToast('Story published successfully!', 'success');
+    //     //     // Redirect to published post or dashboard
+    //     //     setTimeout(() => {
+    //     //       window.location.href = '/blog/' + response.slug;
+    //     //     }, 2000);
+    //     //   })
+    //     //   .catch(error => {
+    //     //     hideLoading();
+    //     //     showToast('Publishing failed: ' + error.message, 'error');
+    //     //   });
+
+    //     // Placeholder simulation
+    //     setTimeout(() => {
+    //       hideLoading();
+    //       showToast('Story published successfully! 🎉', 'success');
+
+    //       // Clear draft after successful publish
+    //       localStorage.removeItem('blogDraft');
+
+    //       // Simulate redirect to published post
+    //       setTimeout(() => {
+    //         showToast('Redirecting to your published story...', 'success');
+    //         // window.location.href = '/blog/your-post-slug';
+    //       }, 2000);
+    //     }, 2000);
+    //   }
+
+      // Button event listeners
+      document.getElementById('saveDraftBtn').addEventListener('click', saveDraft);
+      document.getElementById('previewBtn').addEventListener('click', previewPost);
+    //   document.getElementById('publishBtn').addEventListener('click', publishBlog);
+
+      // Back button
+      document.getElementById('backBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        if (isDirty && confirm('You have unsaved changes. Are you sure you want to leave?')) {
+          // window.location.href = '/dashboard'; // Replace with your dashboard URL
+          showToast('Navigating back to dashboard...', 'success');
+        } else if (!isDirty) {
+          // window.location.href = '/dashboard'; // Replace with your dashboard URL
+          showToast('Navigating back to dashboard...', 'success');
+        }
+      });
+
+      // === LOAD DRAFT ON PAGE LOAD ===
+      function loadDraft() {
+        const savedDraft = localStorage.getItem('blogDraft');
+        if (savedDraft) {
+          try {
+            const draftData = JSON.parse(savedDraft);
+            titleInput.value = draftData.title || '';
+            subtitleInput.value = draftData.subtitle || '';
+            editorContent.innerHTML = draftData.content || '';
+            updateWordCount();
+            showToast('Draft loaded successfully!', 'success');
+          } catch (error) {
+            console.error('Error loading draft:', error);
+          }
+        }
+      }
+
+      // === INITIALIZE ===
+      document.addEventListener('DOMContentLoaded', () => {
+        loadDraft();
+        updateWordCount();
+        titleInput.focus();
+      });
+
+      // === PREVENT DATA LOSS ===
+      window.addEventListener('beforeunload', (e) => {
+        if (isDirty) {
+          e.preventDefault();
+          e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+          return e.returnValue;
+        }
+      });
+
+      // Auto-save on page visibility change (when user switches tabs)
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden && isDirty) {
+          autoSave();
+        }
+      });
+    </script>
+    <script src="signinScript.js"></script>
+  </body>
+</html>
