@@ -20,7 +20,10 @@ mongoose.connect("mongodb+srv://subhrabikiran:LeZshcaShnL3DEnU@cluster0.je3gfax.
 /*
     cross-origin-resource-sharing (cors)
 */
-app.use(cors());
+app.use(cors({
+    origin: true,  // Allow all origins for debugging
+    credentials: true
+}));
 
 /*
     parsing middleware
