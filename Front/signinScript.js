@@ -1,4 +1,5 @@
 /*
+    (OK TESTED)
     signup() function takes the email and password as the input,
     and creates a new dictionary in the users collection of blog-app-database.
 */
@@ -43,6 +44,12 @@ async function signup() {
     }
 }
 
+/*
+    (OK TESTED)
+    @signin() is a funcitno that takes email and password as input,
+    sends them to the backend for user authentication.
+        status codes used -> 200, 404, 401
+*/
 async function signin() {
     const email = document.getElementById("signin-email").value
     const password = document.getElementById("signin-password").value
@@ -73,6 +80,7 @@ async function signin() {
 }
 
 /*
+    (OK TESTED)
     @publishBlog
     fetches token and blogPost from localStorage, then uses axios.post to send the 
     token and blogPost to the backend.
@@ -83,7 +91,7 @@ async function publishBlog(){
     const blogPost = JSON.parse(localStorage.getItem('blogDraft')); // OBJECT
     try {
         const response = await axios.post("http://localhost:3000/publishBlog",{
-            token : token,
+            headers : {token : token},
             title : blogPost.title,
             content : blogPost.content,
             subtitle : blogPost.subtitle
@@ -102,6 +110,35 @@ async function publishBlog(){
             }
         }else{
             showToast("no response from the server! ")
+        }
+    }
+}
+
+/*
+    @updateBlog() is a function that calls itself, fetches the blogs from the backend 
+    and appends it to the id="blogPostsContainer". we can use appendChild functionality
+    to append the blogDiv to the page.
+*/
+async function updateBlog(){
+    const blogDiv = document.getElementById("blogPostsContainer") // the parent div into which new blogs will be appended to
+    const token = localStorage.getItem('token');
+    try {
+        const response = await axios.get("http://localhost:3000/fetchBlog", {
+            headers : {token : token}
+        });
+        if (response.status == 200) {
+            console.log(response);
+            console.log(response.data.blogs);
+        }
+    } catch (error) {
+        if (error.response) {
+            if (error.response.status == 500) {
+                showToast("server unreachable!");
+            }else{
+                showToast("unknown error occured!");
+            }
+        }else{
+            showToast("request not reaching the backend!")
         }
     }
 }

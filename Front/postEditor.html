@@ -1,3 +1,6 @@
+<!--
+  -----------------FULLY WORKING-----------------
+-->
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-theme="yellow">
   <head>
@@ -1571,10 +1574,10 @@
       document.getElementById('backBtn').addEventListener('click', (e) => {
         e.preventDefault();
         if (isDirty && confirm('You have unsaved changes. Are you sure you want to leave?')) {
-          // window.location.href = '/dashboard'; // Replace with your dashboard URL
+          window.location.href = "mainPage.html"; // Replace with your dashboard URL
           showToast('Navigating back to dashboard...', 'success');
         } else if (!isDirty) {
-          // window.location.href = '/dashboard'; // Replace with your dashboard URL
+          window.location.href = "mainPage.htm"; // Replace with your dashboard URL
           showToast('Navigating back to dashboard...', 'success');
         }
       });
