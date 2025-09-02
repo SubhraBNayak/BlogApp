@@ -64,7 +64,7 @@ function emailCheck(req, res, next) {
         req.email = gives you the user email if token verified
 */
 async function jwtAuth(req, res, next){
-    const token = req.headers.token;
+    const token = req.body.token;
     try {
         const email = jwt.verify(token, JWTSECRET).email;
         req.email = email;
@@ -201,11 +201,13 @@ app.post("/publishBlog", jwtAuth, async function(req, res){
     verifies the token, authenticates the user, and then proceeds to fetch the blogs 
     from backend. It fetches 5 blogs at a time.
 */
-app.get("/fetchBlog", jwtAuth, async function(req, res){
+app.post("/fetchBlog", jwtAuth, async function(req, res){
     const email = req.email;
     try {
         const blogs = await BlogModel.find();
-        res.status(200).json({blogs})
+        res.status(200).json({
+            blogs : blogs
+        })
     } catch (error) {
         res.status(500).send({
             message : "bad response from the database!"
