@@ -116,7 +116,6 @@ async function publishBlog() {
     }
 }
 
-let scrollIndex = 0;
 /*
     @updateBlog() is a function that calls itself, fetches the blogs from the backend 
     and appends it to the id="blogPostsContainer". we can use appendChild functionality
@@ -130,7 +129,8 @@ async function updateBlog() {
         });
         if (response.status == 200) {
             const blogs = response.data.blogs;
-            for(let i = 0 ; i = 5 ; i++){
+            const lastIndex = response.data.lastIndex;
+            for(let i = 0 ; i <= lastIndex ; i++){
                 const blog = blogs[i];
                 const title = blog.title;
                 const subtitle = blog.subtitle;
@@ -239,6 +239,3 @@ async function updateBlog() {
         }
     }
 }
-
-//ass the user scrolls down the page, new blogs keep loading and showing up to the page.
-window.addEventListener('scroll', updateBlog());

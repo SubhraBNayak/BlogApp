@@ -21,13 +21,20 @@ const Blog = new Schema({
     commentCounter : {type:Number, default:0},
     title : {type:String, required: true},
     subtitle : {type:String, required: false},
-    content : {type:String, required: true}
+    content : {type:String, required: true},
+    Index : {type:Number}
+})
+
+const BlogIndex = new Schema({
+    Index : {type:Number}
 })
 
 const UserModel = mongoose.model('user', User);
 const BlogModel = mongoose.model('blog', Blog);
+const BlogIndexModel = mongoose.model('blogindex', BlogIndex);
 
 module.exports = {
     UserModel,
-    BlogModel
+    BlogModel,
+    BlogIndexModel
 }

@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
 const path = require('path');
-const { UserModel,BlogModel } = require('./db');
+const { UserModel,BlogModel,BlogIndexModel } = require('./db');
 
 const JWTSECRET = "developersOfBlogger"
 const app = express();
@@ -174,12 +174,18 @@ app.post("/publishBlog", jwtAuth, async function(req, res){
     if (user) {
         try {
             const userOID = user._id;
+            //we are updating the BlogIndexModel by 1 any time the user publishes the blog.
+            //retrieved the objectId manually from compass 68b70196ead0b649e73f945e.
+            const doc = await BlogIndexModel.findById('68b70196ead0b649e73f945e');
+            doc.Index = (doc.Index)+1;
+            await doc.save();
             const newBlog = await BlogModel.create({
                 userOID : userOID,
                 authorEmail : email,
                 title : title,
                 subtitle : subtitle,
-                content : content
+                content : content,
+                Index : doc.Index //here will it pass the updated value of Index
             })
             res.status(200).send({
                 message : "you're published!"
@@ -205,8 +211,11 @@ app.post("/fetchBlog", jwtAuth, async function(req, res){
     const email = req.email;
     try {
         const blogs = await BlogModel.find();
+        const doc = await BlogIndexModel.findById('68b70196ead0b649e73f945e');
+        const lastIndex = doc.Index;
         res.status(200).json({
-            blogs : blogs
+            blogs : blogs,
+            lastIndex : lastIndex
         })
     } catch (error) {
         res.status(500).send({
