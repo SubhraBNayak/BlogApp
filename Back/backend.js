@@ -203,19 +203,22 @@ app.post("/publishBlog", jwtAuth, async function(req, res){
 })
 
 /*
+    (OK TESTED)
     @fetchBlog is an endpoint, it first takes the jwtToken from the frontend.
     verifies the token, authenticates the user, and then proceeds to fetch the blogs 
     from backend. It fetches 5 blogs at a time.
 */
 app.post("/fetchBlog", jwtAuth, async function(req, res){
     const email = req.email;
+    const requiredBlogIndex = req.body.currentIndex;
     try {
-        const blogs = await BlogModel.find();
         const doc = await BlogIndexModel.findById('68b70196ead0b649e73f945e');
         const lastIndex = doc.Index;
+        const blog = await BlogModel.findOne({
+            Index : requiredBlogIndex
+        });
         res.status(200).json({
-            blogs : blogs,
-            lastIndex : lastIndex
+            blog : blog,
         })
     } catch (error) {
         res.status(500).send({

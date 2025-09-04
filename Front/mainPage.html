@@ -1039,11 +1039,169 @@
         background: var(--error);
         color: white;
       }
+      /* 🎯 PERFECTLY CENTERED LOAD MORE */
+      .load-more-wrapper {
+          margin: 48px auto 60px auto;
+          padding: 0 20px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          max-width: 600px;
+          width: 100%;
+      }
+
+      .load-more-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 16px;
+          width: 100%;
+      }
+
+      .load-more-btn {
+          background: rgba(255, 255, 255, 0.08);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          border-radius: 16px;
+          padding: 16px 32px;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          width: auto;
+          min-width: 280px;
+          max-width: 320px;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+          
+          /* Perfect centering */
+          margin: 0 auto;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+
+      .load-more-btn:hover {
+          background: rgba(255, 255, 255, 0.12);
+          border-color: #e09f3e;
+          transform: translateY(-4px);
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 0 20px rgba(224, 159, 62, 0.2);
+      }
+
+      .load-more-content {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          width: 100%;
+      }
+
+      .load-more-loading {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          color: #ffffff;
+          width: 100%;
+      }
+
+      .load-more-icon {
+          width: 20px;
+          height: 20px;
+          color: #e09f3e;
+          transition: transform 0.3s ease;
+          flex-shrink: 0;
+      }
+
+      .load-more-text {
+          font-weight: 600;
+          font-size: 1rem;
+          color: #ffffff;
+          text-align: center;
+      }
+
+      .load-more-count {
+          background: rgba(224, 159, 62, 0.2);
+          color: #e09f3e;
+          padding: 4px 12px;
+          border-radius: 12px;
+          font-size: 0.85rem;
+          font-weight: 600;
+          flex-shrink: 0;
+      }
+
+      .blogs-counter {
+          background: rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 20px;
+          padding: 8px 20px;
+          font-size: 0.9rem;
+          color: rgba(255, 255, 255, 0.7);
+          font-weight: 500;
+          text-align: center;
+          
+          /* Perfect centering for counter */
+          margin: 0 auto;
+          width: fit-content;
+      }
+
+      .blogs-counter #totalBlogsCount {
+          color: #e09f3e;
+          font-weight: 700;
+      }
+
+      /* Loading dots centering */
+      .loading-dots {
+          display: flex;
+          gap: 4px;
+          align-items: center;
+          justify-content: center;
+      }
+
+      .dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #e09f3e;
+          animation: bounce 1.4s ease-in-out infinite;
+      }
+
+      .dot:nth-child(1) { animation-delay: 0s; }
+      .dot:nth-child(2) { animation-delay: 0.2s; }
+      .dot:nth-child(3) { animation-delay: 0.4s; }
+
+      @keyframes bounce {
+          0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+          40% { transform: scale(1); opacity: 1; }
+      }
+
+      /* 📱 Mobile centering */
+      @media (max-width: 768px) {
+          .load-more-wrapper {
+              padding: 0 16px;
+              margin: 40px auto 50px auto;
+          }
+          
+          .load-more-btn {
+              min-width: 260px;
+              max-width: 300px;
+              padding: 14px 24px;
+          }
+          
+          .load-more-text {
+              font-size: 0.95rem;
+          }
+          
+          .load-more-count {
+              font-size: 0.8rem;
+              padding: 3px 10px;
+          }
+      }
 
       /* All other existing functionality remains the same */
     </style>
   </head>
-  <body onload="updateBlog()">
+  <body onload="load10Blogs()">
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
@@ -1187,6 +1345,34 @@
         <!-- Enhanced Blog posts container -->
         <div class="blog-posts" id="blogPostsContainer">
         </div>
+         <!-- 🚨 ADD THIS LOAD MORE SECTION -->
+        <div id="loadMoreSection" class="load-more-wrapper" style="display: none;">
+            <div class="load-more-container">
+                <button class="load-more-btn" onclick="load10Blogs()">
+                    <div class="load-more-content">
+                        <div class="load-more-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 14l-7 7-7-7"/>
+                            </svg>
+                        </div>
+                        <span class="load-more-text">Load More Stories</span>
+                        <div class="load-more-count">+10 posts</div>
+                    </div>
+                    <div class="load-more-loading" style="display: none;">
+                        <div class="loading-dots">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                        <span>Loading...</span>
+                    </div>
+                </button>
+                <div class="blogs-counter">
+                    <span id="totalBlogsCount">0</span> stories loaded
+                </div>
+            </div>
+        </div>
+
       </div>
     </main>
     <!-- Enhanced Add Post Button -->
