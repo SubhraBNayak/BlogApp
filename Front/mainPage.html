@@ -1039,169 +1039,168 @@
         background: var(--error);
         color: white;
       }
-      /* 🎯 PERFECTLY CENTERED LOAD MORE */
-      .load-more-wrapper {
-          margin: 48px auto 60px auto;
-          padding: 0 20px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          max-width: 600px;
-          width: 100%;
-      }
 
-      .load-more-container {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 16px;
-          width: 100%;
-      }
+      /* 🎯 PERFECTLY CENTERED LOAD MORE - Fixed for Visibility */
+.load-more-wrapper {
+    margin: 48px auto 60px auto;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 600px;
+    width: 100%;
+}
 
-      .load-more-btn {
-          background: rgba(255, 255, 255, 0.08);
-          backdrop-filter: blur(20px);
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          border-radius: 16px;
-          padding: 16px 32px;
-          cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          width: auto;
-          min-width: 280px;
-          max-width: 320px;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-          
-          /* Perfect centering */
-          margin: 0 auto;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-      }
+.load-more-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+}
 
-      .load-more-btn:hover {
-          background: rgba(255, 255, 255, 0.12);
-          border-color: #e09f3e;
-          transform: translateY(-4px);
-          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 0 20px rgba(224, 159, 62, 0.2);
-      }
+.load-more-btn {
+    background: linear-gradient(135deg, var(--accent, #e09f3e), var(--accent-dark, #d97706));
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(7, 4, 0, 0.4);
+    border-radius: 16px;
+    padding: 16px 32px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: auto;
+    min-width: 280px;
+    max-width: 320px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-      .load-more-content {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 12px;
-          width: 100%;
-      }
+.load-more-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(224, 159, 62, 0.4);
+    filter: brightness(1.1);
+}
 
-      .load-more-loading {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 12px;
-          color: #ffffff;
-          width: 100%;
-      }
+.load-more-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+}
 
-      .load-more-icon {
-          width: 20px;
-          height: 20px;
-          color: #e09f3e;
-          transition: transform 0.3s ease;
-          flex-shrink: 0;
-      }
+.load-more-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: #090000;
+    width: 100%;
+}
 
-      .load-more-text {
-          font-weight: 600;
-          font-size: 1rem;
-          color: #ffffff;
-          text-align: center;
-      }
+.load-more-icon {
+    width: 20px;
+    height: 20px;
+    color: #010d08;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
 
-      .load-more-count {
-          background: rgba(224, 159, 62, 0.2);
-          color: #e09f3e;
-          padding: 4px 12px;
-          border-radius: 12px;
-          font-size: 0.85rem;
-          font-weight: 600;
-          flex-shrink: 0;
-      }
+.load-more-text {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #ffffff;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
 
-      .blogs-counter {
-          background: rgba(255, 255, 255, 0.05);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 20px;
-          padding: 8px 20px;
-          font-size: 0.9rem;
-          color: rgba(255, 255, 255, 0.7);
-          font-weight: 500;
-          text-align: center;
-          
-          /* Perfect centering for counter */
-          margin: 0 auto;
-          width: fit-content;
-      }
+.load-more-count {
+    background: rgba(224, 159, 62, 0.3);
+    color: #ffffff;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
 
-      .blogs-counter #totalBlogsCount {
-          color: #e09f3e;
-          font-weight: 700;
-      }
+.blogs-counter {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(224, 159, 62, 0.3);
+    border-radius: 20px;
+    padding: 8px 20px;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+    text-align: center;
+    margin: 0 auto;
+    width: fit-content;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
 
-      /* Loading dots centering */
-      .loading-dots {
-          display: flex;
-          gap: 4px;
-          align-items: center;
-          justify-content: center;
-      }
+.blogs-counter #totalBlogsCount {
+    color: #704d18;
+    font-weight: 700;
+}
 
-      .dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: #e09f3e;
-          animation: bounce 1.4s ease-in-out infinite;
-      }
+/* Loading dots centering */
+.loading-dots {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+}
 
-      .dot:nth-child(1) { animation-delay: 0s; }
-      .dot:nth-child(2) { animation-delay: 0.2s; }
-      .dot:nth-child(3) { animation-delay: 0.4s; }
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #e09f3e;
+    animation: bounce 1.4s ease-in-out infinite;
+}
 
-      @keyframes bounce {
-          0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-          40% { transform: scale(1); opacity: 1; }
-      }
+.dot:nth-child(1) { animation-delay: 0s; }
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
 
-      /* 📱 Mobile centering */
-      @media (max-width: 768px) {
-          .load-more-wrapper {
-              padding: 0 16px;
-              margin: 40px auto 50px auto;
-          }
-          
-          .load-more-btn {
-              min-width: 260px;
-              max-width: 300px;
-              padding: 14px 24px;
-          }
-          
-          .load-more-text {
-              font-size: 0.95rem;
-          }
-          
-          .load-more-count {
-              font-size: 0.8rem;
-              padding: 3px 10px;
-          }
-      }
+@keyframes bounce {
+    0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+    40% { transform: scale(1); opacity: 1; }
+}
+
+/* 📱 Mobile centering */
+@media (max-width: 768px) {
+    .load-more-wrapper {
+        padding: 0 16px;
+        margin: 40px auto 50px auto;
+    }
+    
+    .load-more-btn {
+        min-width: 260px;
+        max-width: 300px;
+        padding: 14px 24px;
+    }
+    
+    .load-more-text {
+        font-size: 0.95rem;
+    }
+    
+    .load-more-count {
+        font-size: 0.8rem;
+        padding: 3px 10px;
+    }
+}
 
       /* All other existing functionality remains the same */
     </style>
   </head>
-  <body onload="load10Blogs()">
+  <body onload="sessionStorage.removeItem('currentIndex'), load10Blogs()">
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
@@ -1345,7 +1344,7 @@
         <!-- Enhanced Blog posts container -->
         <div class="blog-posts" id="blogPostsContainer">
         </div>
-         <!-- 🚨 ADD THIS LOAD MORE SECTION -->
+         <!-- THIS LOAD MORE SECTION -->
         <div id="loadMoreSection" class="load-more-wrapper" style="display: none;">
             <div class="load-more-container">
                 <button class="load-more-btn" onclick="load10Blogs()">
@@ -1356,7 +1355,6 @@
                             </svg>
                         </div>
                         <span class="load-more-text">Load More Stories</span>
-                        <div class="load-more-count">+10 posts</div>
                     </div>
                     <div class="load-more-loading" style="display: none;">
                         <div class="loading-dots">

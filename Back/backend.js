@@ -209,11 +209,11 @@ app.post("/publishBlog", jwtAuth, async function(req, res){
     from backend. It fetches 5 blogs at a time.
 */
 app.post("/fetchBlog", jwtAuth, async function(req, res){
-    const email = req.email;
     const requiredBlogIndex = req.body.currentIndex;
-    try {
-        const doc = await BlogIndexModel.findById('68b70196ead0b649e73f945e');
-        const lastIndex = doc.Index;
+    const doc = await BlogIndexModel.findById('68b70196ead0b649e73f945e');
+    const lastIndex = doc.Index;
+    if (requiredBlogIndex < lastIndex) {
+        try {
         const blog = await BlogModel.findOne({
             Index : requiredBlogIndex
         });
@@ -223,6 +223,11 @@ app.post("/fetchBlog", jwtAuth, async function(req, res){
     } catch (error) {
         res.status(500).send({
             message : "bad response from the database!"
+        })
+    }
+    }else{
+        res.status(404).send({
+            message : "Requested Indexed content doesn't exist! "
         })
     }
 })

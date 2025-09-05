@@ -116,7 +116,9 @@ async function publishBlog() {
     }
 }
 
+let theEnd = false; //by default the value of the end is false.
 /*
+    (OK TESTED)
     @updateBlog() is a function that calls itself, fetches the blogs from the backend 
     and appends it to the id="blogPostsContainer". we can use appendChild functionality
     to append the blogDiv to the page.
@@ -228,14 +230,15 @@ async function updateBlog(currentIndex) {
             if (error.response.status == 500) {
                 showToast("server unreachable! ");
             } else if (error.response.status == 401) {
-                showToast("User Authentication failed! ")
+                showToast("User Authentication failed! ");
             }else if (error.response.status == 404){
-                showToast("The End!")
+                theEnd = true;
             }
             else {
                 showToast("unknown error occured! ");
             }
-        } else {
+        } else if (error.request){
+            showToast("Request Not reaching the Backend!");
         }
     }
 }
@@ -252,32 +255,57 @@ function showLoadMoreButton(currentCount) {
     console.log("LoadMore button shown with count:", currentCount);
 }
 
+/*
+    @load10Blogs is used to load 10 blogs at a time, consists of a for loop that runs 10 times.
+    it checks if there's a currentIndex in localStorage, if yes then it sends it to updateBlog
+    and waits for the end of each iteration to update the value by +1, if not, then it initializes 
+    localStorage.setItem('currentIndex', 0) and at the end of the async operation it updates the value 
+    of currentIndex to 1.
+*/
 async function load10Blogs() {
     isLoading = false;
     if (isLoading) return;
     isLoading = true;
     for (let index = 0; index < 10 ; index++) {
-        if (localStorage.getItem('currentIndex')) {
+        if (sessionStorage.getItem('currentIndex')) {
             // Show loading state
             document.querySelector('.load-more-content').style.display = 'none';
             document.querySelector('.load-more-loading').style.display = 'flex';
-            const currentIndex = localStorage.getItem('currentIndex');
+            const currentIndex = sessionStorage.getItem('currentIndex');
             await updateBlog(currentIndex);
-            localStorage.setItem('currentIndex', currentIndex+1);
+            if (theEnd == true) {
+                showToast("The End!")
+                break;
+            }else{
+                theEnd = false;
+                sessionStorage.setItem('currentIndex', Number(currentIndex)+1);
+                continue;
+            }
         }else{
-            // Show loading state
             document.querySelector('.load-more-content').style.display = 'none';
             document.querySelector('.load-more-loading').style.display = 'flex';
-            //initializing currentIndex if we don't have it 
-            await updateBlog(-1);
-            localStorage.setItem('currentIndex', 0);
+            await updateBlog(0);
+            sessionStorage.setItem('currentIndex', 1);
+            if (theEnd === true) {
+                showToast("The End!")
+                break;
+            }else{
+                theEnd = false;
+                continue;
+            }
         }
     }
-    showToast("Done!");
-    totalBlogsLoaded += 10;
-    document.getElementById('totalBlogsCount').textContent = totalBlogsLoaded;
+    if (theEnd == false) {
+        showToast("Done!");
+    }
     
+    totalBlogsLoaded = Number(sessionStorage.getItem('currentIndex'));
+    document.getElementById('totalBlogsCount').textContent = totalBlogsLoaded;
+    showLoadMoreButton(totalBlogsLoaded);
+
     // Restore button state
     document.querySelector('.load-more-content').style.display = 'flex';
-    document.querySelector('.load-more-loading').style.display = 'none';    
+    document.querySelector('.load-more-loading').style.display = 'none';
+
+    isLoading = false;
 }
