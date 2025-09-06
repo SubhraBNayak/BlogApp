@@ -1,5 +1,5 @@
 /*
-    Backend @Blogger
+Backend @Blogger
 */
 const express = require('express');
 const jwt = require('jsonwebtoken');
@@ -9,6 +9,8 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
 const path = require('path');
+const OpenAI = require('openai');
+const rateLimit = require('express-rate-limit');
 const { UserModel,BlogModel,BlogIndexModel } = require('./db');
 
 const JWTSECRET = "developersOfBlogger"
@@ -75,7 +77,6 @@ async function jwtAuth(req, res, next){
         })
     }
 }
-
 /*-----------------ENDPOINTS FOR @BLOGGER-----------------*/
 
 /*
@@ -238,6 +239,6 @@ app.post("/fetchBlog", jwtAuth, async function(req, res){
 app.use(express.static(path.join(__dirname, "Front")));
 
 //http://127.0.0.1:5000/Front/signin.html to open the frontend
-app.listen(3000, () => {
+app.listen(3000 , () => {
     console.log("server running at http://localhost:3000")
 });
