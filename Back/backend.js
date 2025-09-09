@@ -12,6 +12,7 @@ const path = require('path');
 const OpenAI = require('openai');
 const rateLimit = require('express-rate-limit');
 const { UserModel,BlogModel,BlogIndexModel } = require('./db');
+const {main} = require('./googleAi.mjs');
 
 const JWTSECRET = "developersOfBlogger"
 const app = express();
@@ -230,6 +231,28 @@ app.post("/fetchBlog", jwtAuth, async function(req, res){
         res.status(404).send({
             message : "Requested Indexed content doesn't exist! "
         })
+    }
+})
+
+/*
+    (OK TESTED!)
+    @titleSuggestion, it goes through the blog content, sends it to gemini 2.5 flash
+    generates a suitable title and sends it back.
+*/
+app.post("/titleSuggestion", jwtAuth, async function(req, res){
+    const blogContent = req.body.blogContent;
+    if (blogContent) {
+        const response = await main(blogContent);
+        const title = response.text;
+        if (title) {    
+            res.status(200).json({
+                title : title
+            })
+        }else{ 
+            res.status(500) //bad response from server. 
+        }
+    }else{
+        res.status(400) //request not appropriate. 
     }
 })
 
