@@ -214,7 +214,7 @@ app.post("/fetchBlog", jwtAuth, async function(req, res){
     const requiredBlogIndex = req.body.currentIndex;
     const doc = await BlogIndexModel.findById('68b70196ead0b649e73f945e');
     const lastIndex = doc.Index;
-    if (requiredBlogIndex < lastIndex) {
+    if (requiredBlogIndex <= lastIndex) {
         try {
         const blog = await BlogModel.findOne({
             Index : requiredBlogIndex
