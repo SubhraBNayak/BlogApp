@@ -11,7 +11,7 @@ const cors = require('cors');
 const path = require('path');
 const OpenAI = require('openai');
 const rateLimit = require('express-rate-limit');
-const { UserModel,BlogModel,BlogIndexModel } = require('./db');
+const { UserModel,BlogModel,BlogIndexModel,LikeModel,CommentModel } = require('./db');
 const {main} = require('./googleAi.mjs');
 
 const JWTSECRET = "developersOfBlogger"
@@ -78,6 +78,24 @@ async function jwtAuth(req, res, next){
         })
     }
 }
+
+/*
+    @checkBlog checks the existance of a blog. 
+
+*/
+async function checkBlog(req, res, next){
+    const blogId = req.body.blogId;
+    const blog = await BlogModel.findById(blogId);
+    if(blog){
+        blogId = req.blogId;
+        next();
+    }else{
+        res.status(404).send({
+            message : "resource doesn't exist!"
+        })
+    }
+}
+
 /*-----------------ENDPOINTS FOR @BLOGGER-----------------*/
 
 /*
@@ -256,6 +274,171 @@ app.post("/titleSuggestion", jwtAuth, async function(req, res){
     }
 })
 
+/*
+    @likeUpdate takes token and blogId, verifies the token using the jwtAuth middleware. using the blogId it checks
+    if the blog is present in the likes collection. if yes then it checks if the blog is already liked (then no changes)
+    or the blog is not liked yet (change it to 'true' or 'liked'). Else if the blog is not present in the likes collection
+    it first creates the document which contains the user emailId and blogId and like status (true or false) and then
+    changes like status to true.
+        status(200) -> working clean
+        status(201) -> like already exists
+        status(203) -> created a new document in the likes collection and like = true
+        status(404) -> blogId not found! Blog doesn't exist.
+*/
+app.post("/likeUpdate", jwtAuth, checkBlog, async function(req, res){
+    const email = req.email;
+    const blogId = req.blogId;
+    const likeBlog = await LikeModel.findOne({
+        blogId : blogId
+    })
+    if (likeBlog) {
+        if (likeBlog.like === true) {
+            res.status(201).send({
+                message : "already liked!"
+            })
+        }else{
+            likeBlog.like = true;
+            await likeBlog.save();
+            res.status(200).send({
+                message : "liked"
+            })
+        }
+    }else{
+        await likeBlog.create({
+            blogId : blogId,
+            userEmail : email,
+            like : true
+        })
+        res.status(203).send({
+            message : "created the document and changed the like status to true."
+        })
+    }
+})
+
+/*
+    @dislikeUpdate takes token and blogId, verifies the token using the jwtAuth middleware. using the blogId it checks
+    if the blog is present in the likes collection. if yes then it checks if the blog is already disliked (then no changes)
+    or the blog is not disliked yet (change it to 'false' or 'disliked'). Else if the blog is not present in the likes collection
+    it first creates the document which contains the user emailId and blogId and like status (true or false) and then
+    changes like status to false.
+        status(200) -> working clean
+        status(201) -> dislike already exists.
+        status(203) -> created a new document in the likes collection and like = false
+        status(404) -> blogId not found! Blog doesn't exist.
+*/
+app.post("/dislikeUpdate", jwtAuth, checkBlog, async function(req, res){
+    const email = req.email;
+    const blogId = req.blogId;
+    const likeBlog = await LikeModel.findOne({
+        blogId : blogId
+    })
+    if (likeBlog) {
+        if (likeBlog.like === false) {
+            res.status(201).send({
+                message : "already disliked!"
+            })
+        }else{
+            likeBlog.like = false;
+            await likeBlog.save();
+            res.status(200).send({
+                message : "disliked"
+            })
+        }
+    }else{
+        await likeBlog.create({
+            blogId : blogId,
+            userEmail : email,
+            like : false
+        })
+        res.status(203).send({
+            message : "created the document and changed the like status to false."
+        })
+    }
+})
+
+/*
+    @postComment uses jwtAuth middleware(to authenticate the user), and checkBlog middleware(to check if the Blog exists)
+    then it updates the comment to the CommentModel and sends it to the mongoDb server.
+        status(200) -> comment updated
+        status(500) -> internal server error
+*/
+app.post("/postComment", jwtAuth, checkBlog, async function(req, res){
+    const blogId = req.blogId;
+    const email = req.email;
+    const content = req.body.content;
+    try {
+        await CommentModel({
+            blogId : blogId,
+            userEmail : email,
+            content : content
+        })
+        res.status(200).send({
+            message : "comment updated"
+        })
+    } catch (error) {
+        res.status(500).send({
+            message : "internal server error!"
+        })
+    }
+})
+
+/*
+    @fetchMyBlogs endpoint uses jwtAuth middleware to authenticate the user request. then it finds the userId associated
+    with the userEmail. It goes through the Blogs collection and fetches all the Blogs which has userOID : userId. 
+    Then sends it to the frontend.
+        status(200) -> working clean
+        status(500) -> error response from database/internal server error. 
+*/
+app.post("/fetchMyBlogs", jwtAuth, async function(req, res){
+    const userEmail = req.email;
+    const user = await BlogModel.findOne({
+        authorEmail : userEmail
+    })
+    const userId = user.userOID;
+    try {
+        const myBlogs = await BlogModel.find({
+            userOID : userId
+        }) 
+        res.status(200).send({
+            blogs : myBlogs
+        })
+    } catch (error) {
+        res.status(500).send({
+            message : "internal server error!"
+        })
+    }
+})
+
+/*
+    @fetchMyComments is an endpoint that uses jwtAuth middleware to authenticate requests. also finds all the comments
+    by using userEmail. Appends the blogs corresponding to the comments to blogs[] and allComments[]. Then sends it to the
+    frontend.
+        status(200) -> working clean
+        status(500) -> internal server error
+*/
+app.post("/fetchMyComments", jwtAuth, async function(req, res){
+    const email = req.email
+    const comments = await CommentModel.find({
+        userEmail : email
+    })
+    try {
+        let blogs = [];//contains all the blogs 
+        let allComments = [];//contains all my comments to the respective blogs (blogs[1] -> allComments[1])
+        for(i = 0 ; i < comments.length ; i++){
+            let blogId = comments[i].blogId;
+            let comment = comments[i].content;
+            allComments.push(comment);
+            let doc = await BlogModel.findById(blogId);
+            blogs.push(doc);
+        }
+        res.status(200).send({
+            blogs : blogs,
+            allComments : allComments
+        })
+    } catch (error) {
+        res.status(500) //internal server error
+    }
+})
 /*
     serving static files
 */

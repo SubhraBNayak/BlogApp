@@ -29,12 +29,28 @@ const BlogIndex = new Schema({
     Index : {type:Number}
 })
 
+const like = new Schema({
+    blogId : ObjectID,
+    userEmail : String,
+    like : {type:Boolean}
+})
+
+const comment = new Schema({
+    blogId : ObjectID,
+    userEmail : String,
+    content : {type : String, required : true}
+})
+
 const UserModel = mongoose.model('user', User);
 const BlogModel = mongoose.model('blog', Blog);
 const BlogIndexModel = mongoose.model('blogindex', BlogIndex);
+const LikeModel = mongoose.model('like', like);
+const CommentModel = mongoose.model('comment', comment);
 
 module.exports = {
     UserModel,
     BlogModel,
-    BlogIndexModel
+    BlogIndexModel,
+    LikeModel,
+    CommentModel
 }
