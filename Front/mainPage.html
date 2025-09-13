@@ -5,6 +5,7 @@
     <title>Blogger | Home</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
+      /* --- All your existing CSS styles remain unchanged --- */
       @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap');
 
       /* ---------- ENHANCED THEMES ---------- */
@@ -1196,18 +1197,161 @@
         padding: 3px 10px;
     }
 }
+      
+      /* --- NEW: STYLES FOR COMMENT MODAL --- */
+      .comment-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        z-index: 1000;
+        display: none; /* Hidden by default */
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .comment-modal-overlay.visible {
+        display: flex;
+        opacity: 1;
+      }
+      
+      .comment-modal {
+        background: var(--card-bg);
+        padding: 28px;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px var(--shadow-elevated);
+        width: 90%;
+        max-width: 550px;
+        position: relative;
+        transform: scale(0.9);
+        transition: transform 0.3s ease;
+      }
+
+      .comment-modal-overlay.visible .comment-modal {
+        transform: scale(1);
+      }
+      
+      .comment-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--glass-border);
+      }
+      
+      .comment-modal-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--card-text);
+      }
+      
+      .comment-modal-close {
+        background: none;
+        border: none;
+        font-size: 28px;
+        line-height: 1;
+        cursor: pointer;
+        color: var(--muted);
+        transition: color 0.3s ease, transform 0.3s ease;
+      }
+      
+      .comment-modal-close:hover {
+        color: var(--error);
+        transform: rotate(90deg);
+      }
+      
+      .comment-textarea {
+        width: 100%;
+        min-height: 120px;
+        padding: 14px;
+        border: 2px solid var(--input-border);
+        border-radius: 12px;
+        font-family: inherit;
+        font-size: 1rem;
+        color: var(--card-text);
+        background-color: var(--hover-bg);
+        resize: vertical;
+        transition: border-color 0.3s ease;
+      }
+      
+      .comment-textarea:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+      
+      .comment-modal-footer {
+        margin-top: 20px;
+        text-align: right;
+      }
+      
+      .post-comment-btn {
+        padding: 12px 28px;
+        background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-family: inherit;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      
+      .post-comment-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(224, 159, 62, 0.4);
+        filter: brightness(1.1);
+      }
+
+      /* --- NEW: STYLES FOR MY COMMENTS VIEW --- */
+      .my-comment-card {
+        padding-bottom: 16px;
+      }
+
+      .my-comment-quote {
+        background: var(--hover-bg);
+        border-left: 5px solid var(--accent);
+        padding: 20px;
+        margin-bottom: -1px;
+        border-radius: 16px 16px 0 0;
+        font-style: italic;
+        color: var(--card-text);
+        position: relative;
+      }
+      .my-comment-quote::before {
+        content: '“';
+        font-size: 4rem;
+        color: var(--accent);
+        opacity: 0.2;
+        position: absolute;
+        top: -10px;
+        left: 5px;
+      }
+
+      .my-comment-quote p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+      }
+
+      .my-comment-card .blog-card {
+        border-radius: 0 0 16px 16px;
+        opacity: 0.9;
+      }
 
       /* All other existing functionality remains the same */
     </style>
   </head>
-  <body onload="sessionStorage.removeItem('currentIndex'), load10Blogs()">
-    <!-- Toast Container -->
+  <body onload="initMainPage()">
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- Navigation Overlay -->
     <div class="nav-overlay" id="navOverlay"></div>
 
-    <!-- Enhanced Side Navigation -->
     <nav class="side-nav" id="sideNav">
       <div class="nav-header">
         <div class="nav-user-info">
@@ -1234,7 +1378,7 @@
       <div class="nav-links">
         <a href="#" class="nav-link active" id="allBlogsLink">
           <svg class="nav-link-icon" viewBox="0 0 24 24">
-            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0 -1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
           </svg>
           All Blogs
         </a>
@@ -1280,7 +1424,6 @@
       </div>
     </nav>
 
-    <!-- Enhanced Header -->
     <header>
       <div class="header-left">
         <div class="hamburger" id="hamburgerMenu">
@@ -1317,12 +1460,10 @@
       </div>
     </header>
 
-    <!-- Enhanced Main Content -->
     <main class="main-container" id="mainContainer">
       <div class="content-wrapper">
-        <h1 class="page-title">Recent Blog Posts</h1>
+        <h1 class="page-title" id="page-title">Recent Blog Posts</h1>
 
-        <!-- Enhanced Search Bar -->
         <div class="search-container">
           <input type="text" class="search-bar" placeholder="Search posts, authors, or topics..." id="searchInput">
           <svg class="search-icon" viewBox="0 0 24 24">
@@ -1330,7 +1471,6 @@
           </svg>
         </div>
 
-        <!-- Loading Skeletons -->
         <div class="loading-skeletons" id="loadingSkeletons" style="display: none;" >
           <div class="skeleton-post">
             <div class="skeleton skeleton-line short"></div>
@@ -1341,11 +1481,9 @@
           </div>
         </div>
 
-        <!-- Enhanced Blog posts container -->
         <div class="blog-posts" id="blogPostsContainer">
         </div>
-         <!-- THIS LOAD MORE SECTION -->
-        <div id="loadMoreSection" class="load-more-wrapper" style="display: none;">
+         <div id="loadMoreSection" class="load-more-wrapper" style="display: none;">
             <div class="load-more-container">
                 <button class="load-more-btn" onclick="load10Blogs()">
                     <div class="load-more-content">
@@ -1373,12 +1511,27 @@
 
       </div>
     </main>
-    <!-- Enhanced Add Post Button -->
-    <button class="add-post-btn" id="addPostBtn" title="Create New Post" onclick="addInputBox()">
+    <button class="add-post-btn" id="addPostBtn" title="Create New Post">
       <svg style="width: 32px; height: 32px;" viewBox="0 0 24 24" fill="currentColor">
         <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
       </svg>
     </button>
+    
+    <div class="comment-modal-overlay" id="commentModalOverlay">
+        <div class="comment-modal" id="commentModal">
+            <div class="comment-modal-header">
+                <h2 class="comment-modal-title">Add a Comment</h2>
+                <button class="comment-modal-close" id="commentModalCloseBtn">&times;</button>
+            </div>
+            <div class="comment-modal-body">
+                <textarea id="commentTextarea" class="comment-textarea" placeholder="Share your thoughts..."></textarea>
+            </div>
+            <div class="comment-modal-footer">
+                <button class="post-comment-btn" id="postCommentBtn">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
     <script>
       // Enhanced JavaScript - same functionality with better UX
 
@@ -1456,8 +1609,8 @@
         }, 500);
       }
 
-      function showLoading() {
-        document.getElementById('loadingSkeletons').style.display = 'block';
+      function showLoading(showSkeletons = true) {
+        if(showSkeletons) document.getElementById('loadingSkeletons').style.display = 'block';
         document.getElementById('blogPostsContainer').style.opacity = '0.5';
       }
 
@@ -1469,22 +1622,6 @@
       function showAllPosts() {
         document.getElementById('blogPostsContainer').style.opacity = '1';
       }
-
-      // Enhanced read more functionality
-      document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('read-more')) {
-          const content = e.target.previousElementSibling;
-          const isCollapsed = content.classList.contains('collapsed');
-
-          if (isCollapsed) {
-            content.classList.remove('collapsed');
-            e.target.textContent = 'Read less';
-          } else {
-            content.classList.add('collapsed');
-            e.target.textContent = 'Read more';
-          }
-        }
-      });
 
       // Enhanced bookmark functionality
       document.addEventListener('click', (e) => {
@@ -1517,57 +1654,58 @@
 
       hamburgerMenu.addEventListener('click', toggleNav);
       navOverlay.addEventListener('click', toggleNav);
-
+      
+      // Sidebar link handling
       const navLinks = document.querySelectorAll('.nav-link');
       navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
+          navLinks.forEach(l => l.classList.remove('active'));
+          e.currentTarget.classList.add('active');
           if (window.innerWidth <= 768) {
             toggleNav();
           }
-
-          navLinks.forEach(l => l.classList.remove('active'));
-          e.target.classList.add('active');
         });
       });
-
-      document.addEventListener('click', (e) => {
-        if (e.target.closest('.comment-btn')) {
-          const postId = e.target.closest('[data-post-id]').getAttribute('data-post-id');
-          showToast('Comments feature coming soon!', 'warning');
-        }
+      
+      // NEW: Event listeners for navigation
+      document.getElementById('allBlogsLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('page-title').textContent = 'Recent Blog Posts';
+        document.getElementById('blogPostsContainer').innerHTML = '';
+        theEnd = false;
+        initMainPage(); // Reload the main feed
       });
 
-      document.addEventListener('click', (e) => {
-        if (e.target.closest('.like-btn')) {
-          const btn = e.target.closest('.like-btn');
-          btn.classList.toggle('liked');
-          showToast(btn.classList.contains('liked') ? 'Post liked!' : 'Like removed');
-        }
+      document.getElementById('myBlogsLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        fetchMyBlogs();
+      });
 
-        if (e.target.closest('.dislike-btn')) {
-          const btn = e.target.closest('.dislike-btn');
-          btn.classList.toggle('active');
-        }
+      document.getElementById('myCommentsLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        fetchMyComments();
       });
 
       document.getElementById('addPostBtn').addEventListener('click', () => {
-        showToast('Opening post editor...', 'success');
         window.location.href = "postEditor.html";
       });
 
       document.getElementById('logoutBtn').addEventListener('click', () => {
         showToast('Logging out...', 'warning');
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('currentIndex');
+        window.location.href = "signin.html";
       });
 
-      document.getElementById('myBlogsLink').addEventListener('click', (e) => {
-        e.preventDefault();
-        showToast('Navigate to My Blogs', 'success');
+      // NEW: Comment Modal Listeners
+      const commentModalOverlay = document.getElementById('commentModalOverlay');
+      document.getElementById('commentModalCloseBtn').addEventListener('click', hideCommentModal);
+      commentModalOverlay.addEventListener('click', (e) => {
+        if (e.target === commentModalOverlay) {
+          hideCommentModal();
+        }
       });
-
-      document.getElementById('myCommentsLink').addEventListener('click', (e) => {
-        e.preventDefault();
-        showToast('Navigate to My Comments', 'success');
-      });
+      document.getElementById('postCommentBtn').addEventListener('click', postComment);
 
       // Keyboard shortcuts
       document.addEventListener('keydown', (e) => {
@@ -1575,11 +1713,9 @@
           e.preventDefault();
           searchInput.focus();
         }
-
         if (e.key === 'Escape') {
-          if (sideNav.classList.contains('open')) {
-            toggleNav();
-          }
+          if (sideNav.classList.contains('open')) toggleNav();
+          if (commentModalOverlay.classList.contains('visible')) hideCommentModal();
         }
       });
 
